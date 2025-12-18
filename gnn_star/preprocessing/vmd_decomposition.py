@@ -24,6 +24,10 @@ class VMDDecomposer:
     VMD decomposer with extended parameter space and quality checks.
     """
     
+    # Quality score weights
+    ORTHOGONALITY_WEIGHT = 0.5
+    SPARSITY_WEIGHT = 0.3
+    
     def __init__(self, k_range=(3, 8), alpha_range=(1e2, 1e4), tau=0.0, DC=0, init=1, tol=1e-7):
         """
         Initialize VMD decomposer.
@@ -148,7 +152,9 @@ class VMDDecomposer:
         sparsity = np.std(mode_variances) / (np.mean(mode_variances) + 1e-8)
         
         # Combined quality score (lower reconstruction error, lower orthogonality, higher sparsity)
-        quality_score = 1.0 / (1.0 + reconstruction_error) - 0.5 * orthogonality + 0.3 * sparsity
+        quality_score = (1.0 / (1.0 + reconstruction_error) - 
+                        self.ORTHOGONALITY_WEIGHT * orthogonality + 
+                        self.SPARSITY_WEIGHT * sparsity)
         
         return quality_score
     

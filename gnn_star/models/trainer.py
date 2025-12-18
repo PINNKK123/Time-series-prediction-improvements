@@ -16,6 +16,10 @@ class GNNSTARTrainer:
     Trainer for GNN-STAR model with enhanced regularization and optimization.
     """
     
+    # Training constants
+    GRADIENT_CLIP_MAX_NORM = 1.0  # Maximum gradient norm for clipping
+    EPSILON = 1e-8  # Small constant for numerical stability
+    
     def __init__(self,
                  model,
                  kcl_constraint,
@@ -167,7 +171,7 @@ class GNNSTARTrainer:
             loss.backward()
             
             # Gradient clipping for stability
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=self.GRADIENT_CLIP_MAX_NORM)
             
             self.optimizer.step()
             
@@ -242,7 +246,7 @@ class GNNSTARTrainer:
         # R² score (corrected to avoid overestimation)
         ss_res = torch.sum((all_targets - all_predictions) ** 2)
         ss_tot = torch.sum((all_targets - torch.mean(all_targets)) ** 2)
-        r2 = 1 - (ss_res / (ss_tot + 1e-8))
+        r2 = 1 - (ss_res / (ss_tot + self.EPSILON))
         r2 = r2.item()
         
         # Adjusted R² to penalize complexity

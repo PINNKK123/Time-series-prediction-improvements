@@ -353,14 +353,17 @@ def plot_training_history(history):
 
 def main():
     """Main demonstration function."""
+    # Random seed for reproducibility
+    RANDOM_SEED = 42
+    
     print("\n" + "=" * 60)
     print("GNN-STAR Model Demonstration")
     print("Time Series Prediction with InSAR Data")
     print("=" * 60 + "\n")
     
     # Set random seeds for reproducibility
-    np.random.seed(42)
-    torch.manual_seed(42)
+    np.random.seed(RANDOM_SEED)
+    torch.manual_seed(RANDOM_SEED)
     
     # Run demonstrations
     demonstrate_preprocessing()

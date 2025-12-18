@@ -86,7 +86,7 @@ class EdgeConvLayer(MessagePassing):
         
         # Find k nearest neighbors for each node
         _, indices = torch.topk(dist_matrix, k=k + 1, dim=-1, largest=False)
-        indices = indices[:, 1:]  # Exclude self
+        indices = indices[:, 1:]  # Exclude self-connection (first index is always the node itself)
         
         # Construct edge index
         source = torch.arange(n_nodes, device=x.device).view(-1, 1).repeat(1, k).reshape(-1)

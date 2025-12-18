@@ -13,6 +13,9 @@ class DynamicKCLConstraint:
     Dynamic KCL constraint with adaptive thresholds.
     """
     
+    # Loss weighting constants
+    HARD_VIOLATION_WEIGHT = 2.0  # Weight for hard violations (stricter penalty)
+    
     def __init__(self, 
                  window_size=10, 
                  base_threshold=0.1,
@@ -223,7 +226,7 @@ class DynamicKCLConstraint:
         # Combined loss
         total_loss = (
             soft_loss + 
-            2.0 * hard_loss +  # Weight hard violations more
+            self.HARD_VIOLATION_WEIGHT * hard_loss +  # Weight hard violations more
             self.directional_penalty_weight * directional_loss
         )
         

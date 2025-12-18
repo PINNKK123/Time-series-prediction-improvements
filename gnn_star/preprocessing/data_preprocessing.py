@@ -17,6 +17,8 @@ class InSARDataPreprocessor:
     Preprocessor for InSAR time series data with enhanced cleaning and interpolation.
     """
     
+    MIN_SAMPLES_FOR_ZSCORE = 3  # Minimum samples needed for reliable z-score calculation
+    
     def __init__(self, anomaly_threshold=3.0, gaussian_sigma=1.0, boundary_padding=2):
         """
         Initialize the preprocessor.
@@ -56,7 +58,7 @@ class InSARDataPreprocessor:
             for t in range(data.shape[2]):
                 valid_data = feature_data[mask[:, i, t], t]
                 
-                if len(valid_data) > 3:  # Need sufficient data points
+                if len(valid_data) > self.MIN_SAMPLES_FOR_ZSCORE:  # Need sufficient data points
                     z_scores = np.abs(zscore(valid_data, nan_policy='omit'))
                     anomalies = z_scores > self.anomaly_threshold
                     

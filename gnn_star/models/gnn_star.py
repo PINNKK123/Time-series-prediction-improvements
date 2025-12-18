@@ -89,8 +89,8 @@ class EdgeConvLayer(MessagePassing):
         indices = indices[:, 1:]  # Exclude self
         
         # Construct edge index
-        source = torch.arange(n_nodes, device=x.device).view(-1, 1).repeat(1, k).view(-1)
-        target = indices.view(-1)
+        source = torch.arange(n_nodes, device=x.device).view(-1, 1).repeat(1, k).reshape(-1)
+        target = indices.reshape(-1)
         
         edge_index = torch.stack([source, target], dim=0)
         
